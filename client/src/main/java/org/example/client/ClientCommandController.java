@@ -3,6 +3,7 @@ package org.example.client;
 import org.example.controller.commands.*;
 import org.example.controller.ExecutableCommand;
 import org.example.controller.Serialization;
+import org.example.models.RequestDTO;
 
 import java.io.*;
 import java.util.HashMap;
@@ -34,18 +35,20 @@ public class ClientCommandController {
         commands.put("info", new InfoCommand());
     }
 
+
     /**
      * This method takes a command with arguments from the console and sends it to the right command class.
      * @param command the entered by user command with arguments.
      */
-    public static void parseCommand(String[] command) throws IOException {
+    public static void parseCommand(String[] command, String userName, String password) throws IOException {
 
         if(commands.containsKey(command[0])){
             ExecutableCommand executableCommand = commands.get(command[0]);
             executableCommand.setCmd(command);
 
             if(executableCommand.validate()) {
-                byte[] serializedCommand = Serialization.SerializeObject(executableCommand);
+                RequestDTO dto = new RequestDTO(executableCommand,userName,password);
+                byte[] serializedCommand = Serialization.SerializeObject(dto);
                 ClientNetController.SendRequest(serializedCommand);
 
                 ClientNetController.GetResponse();

@@ -1,14 +1,10 @@
 package org.example.models.basics;
 
-import org.example.models.MainCollection;
 import org.example.models.exceptions.LogicException;
 import org.example.models.exceptions.NullFieldException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.sql.Date;
 
 /**
  * The main object in the app that contained in collection
@@ -16,8 +12,7 @@ import java.util.Random;
 public class Dragon implements Comparable<Dragon>, Serializable {
     @Serial
     private static final long serialVersionUID = 1;
-    private static List<Integer> dragonIdList = new ArrayList<>();
-    private final int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private int id = 0; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private final String name; //Поле не может быть null, Строка не может быть пустой
     private final Coordinates coordinates; //Поле не может быть null
     private final Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
@@ -33,16 +28,8 @@ public class Dragon implements Comparable<Dragon>, Serializable {
 
 
     public Dragon(String name, Coordinates coordinates, long age, Float wingspan, boolean speaking, DragonType type, DragonHead head) {
-        while(true) {
-            int ID = new Random().nextInt(998) + 1;
-            if (!dragonIdList.contains(ID)) {
-                this.id = ID;
-                dragonIdList.add(ID);
-                break;
-            }
-        }
 
-        this.creationDate = new Date();
+        this.creationDate = new Date(0L);
 
         if(name.equals("")) {
             throw new LogicException("Вы должны задать имя дракона в файле!");
@@ -73,11 +60,24 @@ public class Dragon implements Comparable<Dragon>, Serializable {
         this.head = head;
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
 
+    public boolean getSpeaking() {
+        return speaking;
+    }
 
-
-
+    public DragonHead getHead() {
+        return head;
+    }
 
     public int getId() {
         return id;

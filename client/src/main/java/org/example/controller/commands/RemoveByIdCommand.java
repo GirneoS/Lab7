@@ -1,6 +1,7 @@
 package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
+import org.example.models.DataBaseHandler;
 import org.example.models.MainCollection;
 import org.example.models.basics.Dragon;
 
@@ -13,28 +14,34 @@ public class RemoveByIdCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method adds "remove_by_id" command. Here the program removes an element from main PriorityQueue by its id.
-     * @param command command with arguments from the console.
+     *
+     * @param userName of user who is going to execute this command
+     * @param password of user who is going to execute this command
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
+        int dragonID = Integer.parseInt(cmd[1]);
+        Dragon dragon = MainCollection.getQueue().stream()
+                .filter(x -> x.getId() == dragonID)
+                .findFirst().orElse(null);
 
-            int ID = Integer.parseInt(cmd[1]);
-            Dragon dragon = MainCollection.getQueue().stream()
-                    .filter(x -> x.getId() == ID)
-                    .findFirst().orElse(null);
+        if(dragon == null)
+            return "\u001B[31m" + "Дракона с таким id не существует в коллекции!" + "\u001B[0m";
+        else {
+            DataBaseHandler handler = new DataBaseHandler();
+            int userID = handler.getUserIdByName(userName);
 
-            if(dragon == null){
-                return "\u001B[31m" + "Дракона с таким id не существует в коллекции!" + "\u001B[0m";
-            }else{
+            if (handler.userOwnerOfDragon(dragonID, userID)){
                 MainCollection.getQueue().remove(dragon);
                 HistoryCommand.UpdateHistory("remove_by_id");
                 return "Вы удалили дракона с id = " + dragon.getId();
-            }
+            }else
+                return "Вы не имеете права удалять дракона с id: " + dragon.getId();
+        }
     }
 
     /**
      * This method validates an arguments for "remove_by_id" command
-     * @param command command with arguments from the console
      * @return returns true if arguments was entered correctly and false if it was entered incorrectly
      */
     @Override

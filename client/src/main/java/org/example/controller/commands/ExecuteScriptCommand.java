@@ -1,6 +1,5 @@
 package org.example.controller.commands;
 
-import org.example.client.ClientCommandController;
 import org.example.controller.ExecutableCommand;
 
 import java.io.*;
@@ -34,7 +33,7 @@ public class ExecuteScriptCommand implements ExecutableCommand, Serializable {
      * This method contains logic for "execute_script" command. Here the program reading commands from file.
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         ArrayList<String> executedCommandResult = new ArrayList<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(cmd[1]))){
             var line = reader.readLine();
@@ -46,7 +45,7 @@ public class ExecuteScriptCommand implements ExecutableCommand, Serializable {
                     fileNames.add(line.split(" ")[1]);
                 }
 
-                executedCommandResult.add(invokeCommand(line.split(" ")));
+                executedCommandResult.add(invokeCommand(line.split(" "),userName,password));
                 line = reader.readLine();
             }
         }catch(IOException e){
@@ -92,13 +91,13 @@ public class ExecuteScriptCommand implements ExecutableCommand, Serializable {
                 "cmd=" + Arrays.toString(cmd) +
                 '}';
     }
-    private String invokeCommand(String[] cmd){
+    private String invokeCommand(String[] cmd, String userName, String password){
         if(commands.containsKey(cmd[0])){
             ExecutableCommand executableCommand = commands.get(cmd[0]);
             executableCommand.setCmd(cmd);
 
             if(executableCommand.validate()){
-                return executableCommand.execute();
+                return executableCommand.execute(userName, password);
             }else{
                 return "";
             }

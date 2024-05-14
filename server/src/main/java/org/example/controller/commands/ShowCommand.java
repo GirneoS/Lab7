@@ -15,10 +15,13 @@ public class ShowCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method contains the logic for "show" command. Here the program saves the collection in file "SavedCollection".
-     * @param command command with arguments from the console.
+     *
+     * @param command  command with arguments from the console.
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         List<String> result = MainCollection.getQueue().stream()
                         .map(Dragon::toString)
                         .collect(Collectors.toList());

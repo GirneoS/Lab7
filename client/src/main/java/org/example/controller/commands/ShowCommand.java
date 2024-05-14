@@ -15,12 +15,16 @@ public class ShowCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method contains the logic for "show" command. Here the program saves the collection in file "SavedCollection".
+     *
+     * @param command  command with arguments from the console.
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         List<String> result = MainCollection.getQueue().stream()
-                        .map(Dragon::toString)
-                        .collect(Collectors.toList());
+                .map(Dragon::toString)
+                .collect(Collectors.toList());
 
         HistoryCommand.UpdateHistory("show");
         return String.join("\n",result);
@@ -28,6 +32,7 @@ public class ShowCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method validates an arguments for "show" command.
+     * @param command command with arguments from the console
      * @return returns true if user not entered arguments and false if he entered some.
      */
     @Override

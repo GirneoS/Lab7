@@ -16,25 +16,25 @@ public class FilterByWingspanCommand implements ExecutableCommand, Serializable 
      * This method contains logic for "filter_by_wingspan" command. Here the program filtering elements from PriorityQueue and print them.
      */
     @Override
-    public String execute() {
-            float goal = Float.parseFloat(cmd[1]);
-            Optional<Dragon> dragon = Optional.empty();
-            final String[] answer = {""};
+    public String execute(String userName, String password) {
+        float goal = Float.parseFloat(cmd[1]);
+        Optional<Dragon> dragon = Optional.empty();
+        final String[] answer = {""};
 
-            try {
-                dragon = MainCollection.getQueue().stream()
-                        .filter(x -> x.getWingspan() == goal)
-                        .findFirst();
-            }catch(NullPointerException ignored){}
+        try {
+            dragon = MainCollection.getQueue().stream()
+                    .filter(x -> x.getWingspan() == goal)
+                    .findFirst();
+        }catch(NullPointerException ignored){}
 
 
-            Optional<Dragon> finalDragon = dragon;
-            dragon.ifPresentOrElse(
-                    v -> {HistoryCommand.UpdateHistory("filter_starts_with_name");
-                        answer[0] += finalDragon.toString();},
-                    () -> answer[0] += "\u001B[31m В коллекции нет драконов, с указанным размахом крыльев! \u001B[0m");
+        Optional<Dragon> finalDragon = dragon;
+        dragon.ifPresentOrElse(
+                v -> {HistoryCommand.UpdateHistory("filter_starts_with_name");
+                    answer[0] += finalDragon.toString();},
+                () -> answer[0] += "\u001B[31m В коллекции нет драконов, с указанным размахом крыльев! \u001B[0m");
 
-            return answer[0];
+        return answer[0];
     }
 
     /**

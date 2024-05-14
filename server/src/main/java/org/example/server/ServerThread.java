@@ -21,7 +21,7 @@ public class ServerThread extends Thread{
             while (true) {
                 if(serverCommand.contains("save")){
                     SaveCommand saveCommand = new SaveCommand();
-                    System.out.println(saveCommand.execute());
+                    System.out.println(saveCommand.execute("",""));
 
                     serverCommand.remove("save");
 

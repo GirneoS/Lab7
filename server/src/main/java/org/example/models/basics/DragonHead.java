@@ -18,4 +18,16 @@ public class DragonHead implements Serializable {
         this.eyesCount = eyesCount;
         this.toothCount = toothCount;
     }
+
+    public long getSize() {
+        return size;
+    }
+
+    public Float getEyesCount() {
+        return eyesCount;
+    }
+
+    public float getToothCount() {
+        return toothCount;
+    }
 }

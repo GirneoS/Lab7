@@ -10,10 +10,13 @@ public class HelpCommand implements ExecutableCommand, Serializable {
     private String[] cmd;
     /**
      * This method contains logic for "help" command. Here the program prints all commands that are allowed to use.
-     * @param command command with arguments from the console
+     *
+     * @param command  command with arguments from the console
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             HistoryCommand.UpdateHistory("help");
             return """
             help : вывести справку по доступным командам

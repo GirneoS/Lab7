@@ -12,7 +12,7 @@ public class FilterStartsWithNameCommand implements ExecutableCommand, Serializa
     private static final long serialVersionUID = 6L;
     private String[] cmd;
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             String subName = cmd[1];
             final String[] answer = {""};
 

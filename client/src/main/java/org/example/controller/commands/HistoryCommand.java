@@ -50,10 +50,13 @@ public class HistoryCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method adds "history" command to collection that contains all last 13 used commands and prints it.
-     * @param command command with arguments from the console.
+     *
+     * @param command  command with arguments from the console.
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             AddHistoryInHistory();
             return PrintHistory();
     }

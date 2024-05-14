@@ -38,7 +38,6 @@ public class DataBaseHandler {
             statement.setString(1,userName);
 
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
             userID = resultSet.getInt("id");
 
         } catch (SQLException e) {
@@ -53,8 +52,8 @@ public class DataBaseHandler {
             Statement statement = connection.createStatement();
 
             resultSet =  statement.executeQuery("SELECT * FROM dragons " +
-                                                "JOIN coordinates ON coordinates.id=dragons.coordinates_id " +
-                                                "JOIN dragon_head ON dragon_head.id=dragons.head_id");
+                    "JOIN coordinates ON coordinates.id=dragons.coordinates_id " +
+                    "JOIN dragon_head ON dragon_head.id=dragons.head_id");
 
 
         }catch(SQLException e){
@@ -90,20 +89,6 @@ public class DataBaseHandler {
         }
     }
 
-    public void clearDB(){
-        try{
-            connection.createStatement().execute("TRUNCATE dragons");
-            connection.createStatement().execute("TRUNCATE dragon_head CASCADE");
-            connection.createStatement().execute("TRUNCATE coordinates CASCADE");
-
-            connection.createStatement().execute("ALTER SEQUENCE dragons_id_seq RESTART");
-            connection.createStatement().execute("ALTER SEQUENCE dragon_head_id_seq RESTART");
-            connection.createStatement().execute("ALTER SEQUENCE coordinates_id_seq RESTART");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void deleteDragonById(int dragonId){
         try{
             String query = "DELETE FROM dragons WHERE id=?";
@@ -131,7 +116,19 @@ public class DataBaseHandler {
             throw new RuntimeException(e);
         }
     }
+    public void clearDB(){
+        try{
+            connection.createStatement().execute("TRUNCATE dragons");
+            connection.createStatement().execute("TRUNCATE dragon_head CASCADE");
+            connection.createStatement().execute("TRUNCATE coordinates CASCADE");
 
+            connection.createStatement().execute("ALTER SEQUENCE dragons_id_seq RESTART");
+            connection.createStatement().execute("ALTER SEQUENCE dragon_head_id_seq RESTART");
+            connection.createStatement().execute("ALTER SEQUENCE coordinates_id_seq RESTART");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public boolean insertDragon(Dragon dragon,int userID){
         try{
             int id = getLastIdOfDragon();
@@ -162,10 +159,10 @@ public class DataBaseHandler {
             int dragonHeadID = dragonHeadIDResult.getInt("last_value");
 
             String insertDragon = "INSERT INTO dragons(name,creation_date,age,wingspan,speaking,type,head_id,coordinates_id,user_id)" +
-                    "VALUES(?,?,?,?,?,CAST(? AS dragon_type),?,?,?)";
+                    "VALUES(?,?,?,?,?,?,?,?,?)";
             PreparedStatement dragonStatement = connection.prepareStatement(insertDragon);
             dragonStatement.setString(1,dragon.getName());
-            dragonStatement.setDate(2, dragon.getCreationDate());
+            dragonStatement.setDate(2, (Date) dragon.getCreationDate());
             dragonStatement.setLong(3,dragon.getAge());
             dragonStatement.setFloat(4,dragon.getWingspan());
             dragonStatement.setBoolean(5,dragon.getSpeaking());

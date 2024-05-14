@@ -15,7 +15,7 @@ public class SaveCommand implements ExecutableCommand, Serializable {
      * This method contains the logic for "save" command. Here the program saves the collection in file "SavedCollection".
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         File file = new File("SavedApp");
         if(Files.isWritable(file.toPath())){
             try(FileWriter writer = new FileWriter(file)) {

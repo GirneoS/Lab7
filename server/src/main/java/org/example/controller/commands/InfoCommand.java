@@ -12,10 +12,13 @@ public class InfoCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method contains the logic for "info" command. Here the program prints type of main collection in app, date and time of initialization and number of dragons in collection.
-     * @param command command with arguments from the console
+     *
+     * @param command  command with arguments from the console
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             HistoryCommand.UpdateHistory("info");
             return "Тип: PriorityQueue\nДата инициализации: " + MainCollection.getInitDate() + "\nКоличество элементов: " + MainCollection.getQueue().size();
     }

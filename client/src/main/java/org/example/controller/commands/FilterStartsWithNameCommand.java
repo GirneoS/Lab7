@@ -12,20 +12,20 @@ public class FilterStartsWithNameCommand implements ExecutableCommand, Serializa
     private static final long serialVersionUID = 6L;
     private String[] cmd;
     @Override
-    public String execute() {
-            String subName = cmd[1];
-            final String[] answer = {""};
+    public String execute(String userName, String password) {
+        String subName = cmd[1];
+        final String[] answer = {""};
 
-            Optional<Dragon> dragon = MainCollection.getQueue().stream()
-                    .filter(x -> x.getName().startsWith(subName))
-                    .findFirst();
+        Optional<Dragon> dragon = MainCollection.getQueue().stream()
+                .filter(x -> x.getName().startsWith(subName))
+                .findFirst();
 
-            dragon.ifPresentOrElse(
-                    v -> {HistoryCommand.UpdateHistory("filter_starts_with_name");
-                        answer[0] += dragon.toString();},
-                    () -> answer[0] += "\u001B[31m" + "В коллекции нет драконов, у которых имя начинается с указанной подстроки!" + "\u001B[0m");
+        dragon.ifPresentOrElse(
+                v -> {HistoryCommand.UpdateHistory("filter_starts_with_name");
+                    answer[0] += dragon.toString();},
+                () -> answer[0] += "\u001B[31m" + "В коллекции нет драконов, у которых имя начинается с указанной подстроки!" + "\u001B[0m");
 
-            return answer[0];
+        return answer[0];
     }
 
     @Override

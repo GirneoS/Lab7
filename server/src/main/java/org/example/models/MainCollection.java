@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,95 +23,44 @@ public class MainCollection {
     private static PriorityQueue<Dragon> appQueue = new PriorityQueue<>();
     private static Date initDate;
 
-//    static{
-//        File file = new File(System.getenv("INIT_DRAGON"));
-//        if (!Files.isReadable(file.toPath())) {
-//            System.out.println("\u001B[31m" + "У вас нет доступа к файлу инициализации коллекции!" + "\u001B[0m");
-//            System.exit(1);
-//        } else {
-//            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-//                reader.readLine();
-//                String line = reader.readLine();
-//                while (line != null) {
-//                    String[] fields = line.split(",");
-//
-//
-//                    String nameField = fields[0];
-//                    if (nameField.equals("")){
-//                        throw new LogicException("Введите конкретное имя дракона");
-//                    }
-//
-//                    String Xline = fields[1];
-//                    Integer coordinateXField;
-//                    if(Xline.equals(""))
-//                        throw new NullFieldException("Введите конкретное число в поле x координаты");
-//                    else
-//                        coordinateXField = Integer.parseInt(Xline);
-//
-//                    float coordinateYField = Float.parseFloat(fields[2]);
-//                    long ageField = Long.parseLong(fields[3]);
-//                    if(ageField<=0){
-//                        throw new LogicException("Возраст дракона, указанный в файле, должен быть больше 0");
-//                    }
-//                    String wingLine = fields[4];
-//                    Float wingspanField;
-//                    if(wingLine.equals("")) {
-//                        wingspanField = null;
-//                    }else{
-//                        if(Float.parseFloat(wingLine)>0) {
-//                            wingspanField = Float.parseFloat(wingLine);
-//                        }else{
-//                            throw new LogicException("Размах крыльев дракона, указанный в файле, должен быть больше 0");
-//                        }
-//
-//                    }
-//                    boolean speakingField = Boolean.parseBoolean(fields[5]);
-//                    String typeLine = fields[6];
-//                    DragonType typeField;
-//                    if(typeLine.equals("")){
-//                        typeField = null;
-//                    }else {
-//                        typeField =DragonType.valueOf(typeLine);
-//                    }
-//                    long headSize = Long.parseLong(fields[7]);
-//                    String eyesLine = fields[8];
-//                    Float headEyesCount;
-//                    if(eyesLine.equals("")){
-//                        headEyesCount = null;
-//                    }else {
-//                        headEyesCount = Float.parseFloat(fields[8]);
-//                    }
-//                    float headToothCount = Float.parseFloat(fields[9]);
-//
-//                    appQueue.add(new Dragon(nameField, new Coordinates(coordinateXField, coordinateYField), ageField, wingspanField, speakingField, typeField, new DragonHead(headSize, headEyesCount, headToothCount)));
-//
-//                    line = reader.readLine();
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//        initDate = new Date();
-//    }
     static{
-        DataBaseHandler DBHandler = new DataBaseHandler("jdbc:postgresql://localhost:5433/studs", "s413030", System.getenv("helios_db_pass"));
-        DBHandler.connectToDataBase();
 
-        ResultSet dragons = DBHandler.getDragons();
+        DataBaseHandler dbHandler = new DataBaseHandler();
+        dbHandler.connectToDataBase();
 
+        ResultSet dragons = dbHandler.getDragons();
+
+        int id;
         String name;
-        Coordinates coordinates;
         Date creationDate;
         long age;
         Float wingspan;
         boolean speaking;
         DragonType type;
-        DragonHead head;
 
         try{
             while(dragons.next()){
+                id = dragons.getInt("id");
+                name = dragons.getString("name");
+                age = dragons.getLong("age");
+                wingspan = dragons.getFloat("wingspan");
+                speaking = dragons.getBoolean("speaking");
+                type = DragonType.valueOf(dragons.getString("type"));
 
+
+                ResultSet head_data = dbHandler.getDragonHeadById(dragons.getInt("head_id"));
+                head_data.next();
+                DragonHead dragon_head = new DragonHead(head_data.getInt("size"),head_data.getFloat("eyes_count"),head_data.getFloat("tooth_count"));
+
+
+                ResultSet coordinates_data = dbHandler.getCoordinatesRowById(dragons.getInt("coordinates_id"));
+                coordinates_data.next();
+                Coordinates coordinates = new Coordinates(coordinates_data.getInt("x"),coordinates_data.getFloat("y"));
+
+                Dragon dragon = new Dragon(name, coordinates, age, wingspan,speaking,type,dragon_head);
+                dragon.setId(id);
+
+                appQueue.add(dragon);
 
             }
         }catch(SQLException e){

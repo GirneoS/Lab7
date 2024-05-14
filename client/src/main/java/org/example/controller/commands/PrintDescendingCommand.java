@@ -14,10 +14,12 @@ public class PrintDescendingCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method adds "print_descending" command. Here the program prints all elements of main PriorityQueue in reverse order.
-     * @param command command with arguments from the console.
+     *
+     * @param userName
+     * @param password
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
 
         List<String> reverseDragons = MainCollection.getQueue().stream()
                     .map(Dragon::toString)
@@ -29,7 +31,6 @@ public class PrintDescendingCommand implements ExecutableCommand, Serializable {
 
     /**
      * This method validates an arguments for "print_descending" command.
-     * @param command command with arguments from the console
      * @return returns true if user not entered arguments and false if he entered some.
      */
     @Override

@@ -16,7 +16,7 @@ public class FilterByWingspanCommand implements ExecutableCommand, Serializable 
      * This method contains logic for "filter_by_wingspan" command. Here the program filtering elements from PriorityQueue and print them.
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             float goal = Float.parseFloat(cmd[1]);
             Optional<Dragon> dragon = Optional.empty();
             final String[] answer = {""};

@@ -1,6 +1,7 @@
 package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
+import org.example.models.DataBaseHandler;
 import org.example.models.MainCollection;
 
 import java.io.Serializable;
@@ -14,12 +15,14 @@ public class ClearCommand implements ExecutableCommand, Serializable {
      * This method contains logic for "clear" command. Here the program makes PriorityQueue empty.
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
             int sizeCollection = MainCollection.getQueue().size();
             if(sizeCollection==0){
                 return "\u001B[31m" + "Коллекция уже пустая!" + "\u001B[0m";
             }else {
                 for (int i = 0; i < sizeCollection; i++) {
+                    DataBaseHandler handler = new DataBaseHandler();
+                    handler.clearDB();
                     MainCollection.getQueue().remove();
                 }
                 HistoryCommand.UpdateHistory("clear");

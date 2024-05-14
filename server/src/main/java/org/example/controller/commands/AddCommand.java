@@ -1,6 +1,7 @@
 package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
+import org.example.models.DataBaseHandler;
 import org.example.models.MainCollection;
 import org.example.models.basics.Coordinates;
 import org.example.models.basics.Dragon;
@@ -21,10 +22,18 @@ public class AddCommand implements ExecutableCommand, Serializable {
      *
      */
     @Override
-    public String execute() {
-        MainCollection.getQueue().add(dragon);
-        HistoryCommand.UpdateHistory("add Dragon");
-        return "\033[0;34m" + "Новый дракон: " + dragon + "\u001B[0m";
+    public String execute(String userName, String password) {
+        DataBaseHandler handler = new DataBaseHandler();
+        handler.connectToDataBase();
+        int userID = handler.getUserIdByName(userName);
+
+        if(handler.insertDragon(dragon,userID)) {
+            MainCollection.getQueue().add(dragon);
+            HistoryCommand.UpdateHistory("add");
+
+            return "\033[0;34m" + "Новый дракон: " + dragon + "\u001B[0m";
+        }
+        return "\u001B[31m" + "Нового дракона не получилось добавить в базу данных!"+"\u001B[0m";
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
-import org.example.client.InputClient;
 
 import java.io.*;
 import java.util.Arrays;
@@ -14,13 +13,13 @@ public class ExitCommand implements ExecutableCommand, Serializable {
      * This method contains logic for "exit" command. Here the program exits from app.
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         SaveCommand saveCommand = new SaveCommand();
-        var savedStatus = saveCommand.execute();
+        var savedStatus = saveCommand.execute(userName, password);
 
         System.out.println(savedStatus);
 
-        return "\033[0;34m" + "Завершение работы приложения..." + "\u001B[0m";
+        return "exit";
 
     }
 
@@ -31,7 +30,6 @@ public class ExitCommand implements ExecutableCommand, Serializable {
     @Override
     public boolean validate() {
         if(cmd.length==1){
-            InputClient.setRunningStatus(false);
             return true;
         }else{
             System.out.println("\u001B[31m" + "У команды exit нет аргументов!" + "\u001B[0m");

@@ -15,7 +15,7 @@ public class SaveCommand implements ExecutableCommand, Serializable {
      * This method contains the logic for "save" command. Here the program saves the collection in file "SavedCollection".
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         File file = new File("SavedApp");
         if(Files.isWritable(file.toPath())){
             try(FileWriter writer = new FileWriter(file)) {
@@ -37,7 +37,7 @@ public class SaveCommand implements ExecutableCommand, Serializable {
         }else{
             return "\u001B[31m" + "У вас нет прав для сохранения файла" + "\u001B[0m";
         }
-        }
+    }
     /**
      * This method validates an arguments for "save" command.
      * @return returns true if user not entered arguments and false if he entered some.

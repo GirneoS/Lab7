@@ -13,9 +13,9 @@ public class ExitCommand implements ExecutableCommand, Serializable {
      * This method contains logic for "exit" command. Here the program exits from app.
      */
     @Override
-    public String execute() {
+    public String execute(String userName, String password) {
         SaveCommand saveCommand = new SaveCommand();
-        var savedStatus = saveCommand.execute();
+        var savedStatus = saveCommand.execute(userName, password);
 
         System.out.println(savedStatus);
 
