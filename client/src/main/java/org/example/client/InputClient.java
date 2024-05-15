@@ -13,19 +13,31 @@ public class InputClient {
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
 
-        while(userName==null && password==null){
-            System.out.print("Вы хотите войти(1) или зарегестрироваться(2)?");
-            System.out.print(":");
-            String authenticate = scanner.nextLine();
-            if(authenticate.equals("1") || authenticate.equals("2")){
-                getDataAboutUser(authenticate);
-            }else{
-                System.out.println("\u001B[31m" + "Такого варианта аутентификации нет!" + "\u001B[0m");
+        String[] authentication;
+        while(true){
+            System.out.print("Вы хотите войти(login) или зарегестрироваться(register): ");
+            authentication = scanner.nextLine().split(" ");
+            if(authentication[0].equals("login") || authentication[0].equals("register")) {
+                System.out.println(Arrays.toString(authentication));
+                System.out.print("Введите никнейм: ");
+                String enteredName = scanner.nextLine();
+                System.out.print("Введите пароль: ");
+                String enteredPass = scanner.nextLine();
+
+                userName = enteredName;
+                password = enteredPass;
+
+                if (ClientCommandController.parseAuthentication(authentication, enteredName, enteredPass)) {
+                    break;
+                }
             }
         }
 
         String[] command;
         while(RunningStatus){
+
+
+
             System.out.print(">");
             if(scanner.hasNextLine()) {
                 command = scanner.nextLine().split(" ");

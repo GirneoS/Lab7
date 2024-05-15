@@ -15,11 +15,13 @@ public class ClientNetController {
             SocketAddress myAddress = new InetSocketAddress("127.0.0.1",8286);
             channel.bind(myAddress);
 
-            SocketAddress address = new InetSocketAddress("127.0.0.1", 8187);
-
+            SocketAddress address = new InetSocketAddress("127.0.0.1", 8188);
+            System.out.println("authenticate-19");
             ByteBuffer buffer = ByteBuffer.wrap(arr);
             channel.getLocalAddress();
             channel.send(buffer, address);
+
+            System.out.println("authenticate-24");
 
             buffer.clear();
             buffer.flip();
@@ -27,6 +29,7 @@ public class ClientNetController {
             buffer = ByteBuffer.wrap(responseOfAuthentication);
 
             channel.receive(buffer);
+            System.out.println("authenticate-32");
             result = Serialization.DeserializeObject(responseOfAuthentication);
 
         } catch (ClassNotFoundException e) {
@@ -41,7 +44,7 @@ public class ClientNetController {
             SocketAddress myAddress = new InetSocketAddress("127.0.0.1",8286);
             channel.bind(myAddress);
 
-            SocketAddress address = new InetSocketAddress("127.0.0.1", 8187);
+            SocketAddress address = new InetSocketAddress("127.0.0.1", 8188);
 
             ByteBuffer buffer = ByteBuffer.wrap(arr);
             channel.getLocalAddress();

@@ -16,7 +16,7 @@ public class ClientCommandController {
      * This map stores a list of command classes and string association for each.
      */
     private static final HashMap<String, ExecutableCommand> commands = new HashMap<>();
-
+    private static final HashMap<String, ExecutableCommand> authenticateCom = new HashMap<>();
 
     static{
         commands.put("help", new HelpCommand());
@@ -33,6 +33,8 @@ public class ClientCommandController {
         commands.put("print_descending", new PrintDescendingCommand());
         commands.put("history", new HistoryCommand());
         commands.put("info", new InfoCommand());
+        authenticateCom.put("login", new LoginCommand());
+        authenticateCom.put("register", new RegisterCommand());
     }
 
 
@@ -45,10 +47,12 @@ public class ClientCommandController {
         if(commands.containsKey(command[0])){
             ExecutableCommand executableCommand = commands.get(command[0]);
             executableCommand.setCmd(command);
+            executableCommand.setUserName(userName);
+            executableCommand.setPassword(password);
 
             if(executableCommand.validate()) {
-                RequestDTO dto = new RequestDTO(executableCommand,userName,password);
-                byte[] serializedCommand = Serialization.SerializeObject(dto);
+
+                byte[] serializedCommand = Serialization.SerializeObject(executableCommand);
                 ClientNetController.SendRequest(serializedCommand);
 
                 ClientNetController.GetResponse();
@@ -56,5 +60,33 @@ public class ClientCommandController {
         }else{
             System.out.println("\u001B[31m" + "Команда "+command[0]+" не найдена!" + "\u001B[0m");
         }
+    }
+
+    public static boolean parseAuthentication(String[] command, String userName, String password) throws IOException {
+        if(authenticateCom.containsKey(command[0])){
+            ExecutableCommand executableCommand = authenticateCom.get(command[0]);
+            executableCommand.setCmd(command);
+            executableCommand.setUserName(userName);
+            executableCommand.setPassword(password);
+
+            if(executableCommand.validate()){
+                byte[] bytesOfAuth = Serialization.SerializeObject(executableCommand);
+
+
+                boolean result =  ClientNetController.Authenticate(bytesOfAuth);
+                System.out.println("ok");
+                if(result)
+                    System.out.println("Вы успешно вошли!");
+                else if(executableCommand.getType().equals("register"))
+                    System.out.println("Пользователь с таким именем уже существует!");
+                else
+                    System.out.println("Вы неправильно ввели имя пользователя или пароль!");
+
+                return result;
+            }
+            System.out.println("not ok");
+        }
+        System.out.println("Такого варианта аутентификации нет!");
+        return false;
     }
 }

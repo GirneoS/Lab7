@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 
-public class ServerThread extends Thread{
+public class ServerInput extends Thread{
     private static HashSet<String> serverCommand = new HashSet<>();
-    private static ServerThread consoleInputServer;
+    private static ServerInput consoleInputServer;
 
-    private ServerThread() {
+    private ServerInput() {
     }
 
     @Override
@@ -42,9 +42,9 @@ public class ServerThread extends Thread{
         }
     }
 
-    public static ServerThread makeConsoleInput(){
+    public static ServerInput makeConsoleInput(){
         if (consoleInputServer==null){
-            consoleInputServer = new ServerThread();
+            consoleInputServer = new ServerInput();
             return consoleInputServer;
         }else{
             return consoleInputServer;

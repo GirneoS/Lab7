@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class DataBaseHandler {

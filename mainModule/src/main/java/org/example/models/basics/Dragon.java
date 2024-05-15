@@ -3,7 +3,8 @@ package org.example.models.basics;
 import org.example.models.exceptions.LogicException;
 import org.example.models.exceptions.NullFieldException;
 
-import java.io.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**

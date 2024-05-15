@@ -1,18 +1,7 @@
 package org.example.models;
 
-import org.example.models.basics.Coordinates;
 import org.example.models.basics.Dragon;
-import org.example.models.basics.DragonHead;
-import org.example.models.basics.DragonType;
-import org.example.models.exceptions.LogicException;
-import org.example.models.exceptions.NullFieldException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.PriorityQueue;

@@ -1,11 +1,6 @@
 package org.example.controller.commands;
 
-import org.example.client.ClientNetController;
 import org.example.controller.ExecutableCommand;
-import org.example.controller.Serialization;
-
-import java.io.IOException;
-import java.util.Scanner;
 
 public class LoginCommand implements ExecutableCommand {
     private String type = "login";

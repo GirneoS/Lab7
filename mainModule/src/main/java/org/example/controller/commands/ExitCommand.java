@@ -2,7 +2,7 @@ package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.Arrays;
 
 public class ExitCommand implements ExecutableCommand, Serializable {
