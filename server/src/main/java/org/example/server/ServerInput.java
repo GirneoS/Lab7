@@ -16,38 +16,5 @@ public class ServerInput extends Thread{
 
     @Override
     public void run() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            while (true) {
-                if(serverCommand.contains("save")){
-                    SaveCommand saveCommand = new SaveCommand();
-                    System.out.println(saveCommand.execute("",""));
-
-                    serverCommand.remove("save");
-
-                }else if(serverCommand.contains("")){
-                    serverCommand.remove("");
-                    continue;
-
-                }else if(!serverCommand.isEmpty()){
-                    System.out.println("\u001B[31m" + "Введена неверная серверная команда!" + "\u001B[0m");
-                    serverCommand.clear();
-                }else{
-                    String input = reader.readLine();
-                    serverCommand.add(input);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static ServerInput makeConsoleInput(){
-        if (consoleInputServer==null){
-            consoleInputServer = new ServerInput();
-            return consoleInputServer;
-        }else{
-            return consoleInputServer;
-        }
     }
 }

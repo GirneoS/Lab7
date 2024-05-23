@@ -7,9 +7,5 @@ public class ServerController {
     public static void main(String[] args) {
         logger.info("The server has just start!\n-------------------------------------------------\n");
 
-        ServerInput input = ServerInput.makeConsoleInput();
-
-        if(!input.isAlive())
-            input.start();
     }
 }
