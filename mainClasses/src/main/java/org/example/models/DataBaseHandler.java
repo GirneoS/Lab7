@@ -19,14 +19,11 @@ public class DataBaseHandler {
 
     public void connectToDataBase(){
         try{
-            Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url,name,password);
             System.out.println("Подключение к базе данных установлено!");
         }catch (SQLException e) {
             System.out.println("Не удалось подключиться к базе данных. Завершение приложения.");
             System.exit(-1);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
     public int getUserIdByName(String userName){
