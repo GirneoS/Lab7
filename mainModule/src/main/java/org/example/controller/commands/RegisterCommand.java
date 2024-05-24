@@ -1,6 +1,7 @@
 package org.example.controller.commands;
 
 import org.example.controller.ExecutableCommand;
+import org.example.models.DataBaseHandler;
 
 import java.util.Scanner;
 
@@ -11,7 +12,13 @@ public class RegisterCommand implements ExecutableCommand {
     private String[] cmd;
     @Override
     public String execute(String userName, String password) {
-        return null;
+        DataBaseHandler handler = new DataBaseHandler();
+        handler.connectToDataBase();
+
+        if(handler.registration(userName, password))
+            return "accepted";
+        else
+            return "ineligible";
     }
 
     @Override

@@ -27,6 +27,7 @@ public class AddCommand implements ExecutableCommand, Serializable {
     @Override
     public String execute(String userName, String password) {
         DataBaseHandler handler = new DataBaseHandler();
+        handler.connectToDataBase();
         int userID = handler.getUserIdByName(userName);
 
         if(handler.insertDragon(dragon,userID)) {

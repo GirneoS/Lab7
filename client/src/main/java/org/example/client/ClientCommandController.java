@@ -62,12 +62,10 @@ public class ClientCommandController {
         }
     }
 
-    public static boolean parseAuthentication(String[] command, String userName, String password) throws IOException {
+    public static boolean parseAuthentication(String[] command) throws IOException {
         if(authenticateCom.containsKey(command[0])){
             ExecutableCommand executableCommand = authenticateCom.get(command[0]);
             executableCommand.setCmd(command);
-            executableCommand.setUserName(userName);
-            executableCommand.setPassword(password);
 
             if(executableCommand.validate()){
                 byte[] bytesOfAuth = Serialization.SerializeObject(executableCommand);

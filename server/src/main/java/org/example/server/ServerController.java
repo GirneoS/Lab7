@@ -1,5 +1,9 @@
 package org.example.server;
 
+import org.example.models.MainCollection;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class ServerController {
@@ -7,6 +11,7 @@ public class ServerController {
     public static void main(String[] args) {
         logger.info("The server has just start!\n-------------------------------------------------\n");
 
-
+        ExecutorService service = Executors.newSingleThreadExecutor();
+        service.execute(new ServerInput());
     }
 }

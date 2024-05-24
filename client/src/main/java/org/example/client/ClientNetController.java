@@ -9,19 +9,15 @@ import java.nio.channels.DatagramChannel;
 
 public class ClientNetController {
     public static boolean Authenticate(byte[] arr) throws IOException {
-        boolean result = false;
-
         try(DatagramChannel channel = DatagramChannel.open()){
             SocketAddress myAddress = new InetSocketAddress("127.0.0.1",8286);
             channel.bind(myAddress);
 
             SocketAddress address = new InetSocketAddress("127.0.0.1", 8188);
-            System.out.println("authenticate-19");
             ByteBuffer buffer = ByteBuffer.wrap(arr);
             channel.getLocalAddress();
             channel.send(buffer, address);
 
-            System.out.println("authenticate-24");
 
             buffer.clear();
             buffer.flip();
@@ -29,14 +25,12 @@ public class ClientNetController {
             buffer = ByteBuffer.wrap(responseOfAuthentication);
 
             channel.receive(buffer);
-            System.out.println("authenticate-32");
-            result = Serialization.DeserializeObject(responseOfAuthentication);
+            String response = Serialization.DeserializeObject(responseOfAuthentication);
+            return response.equals("accepted");
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-        return result;
     }
     public static void SendRequest(byte[] arr) throws IOException {
 
