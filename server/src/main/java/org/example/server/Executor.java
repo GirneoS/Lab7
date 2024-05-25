@@ -19,7 +19,7 @@ public class Executor implements Runnable{
         this.bytesOfRequest = bytesOfRequest;
     }
 
-    //Обработка запроса
+    //Чтение запроса
     @Override
     public void run() {
         try {
