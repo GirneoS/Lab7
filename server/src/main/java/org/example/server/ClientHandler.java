@@ -19,10 +19,12 @@ public class ClientHandler implements Runnable{
     public void run() {
         try(DatagramChannel channel = DatagramChannel.open()){
             ExecutableCommand command = Server.getQueueOfCommands().poll();
+            //обработка запроса
             String result = command.execute(command.getUserName(), command.getPassword());
 
             byte[] bytesOfResult = Serialization.SerializeObject(result);
             ByteBuffer buffer = ByteBuffer.wrap(bytesOfResult);
+            //оправка ответа
             channel.send(buffer, clientAddress);
 
         }catch(IOException e){

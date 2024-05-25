@@ -41,7 +41,7 @@ public class Server {
 
                 SocketAddress address = channel.receive(buffer);
                 logger.info("Request has been received\n-------------------------------------------------");
-                //Чтение запроса в лямбда функции снизу
+                //Чтение запроса
                 threadPool.submit(() -> {
                     try {
                         ExecutableCommand command = Serialization.DeserializeObject(bytesOfRequest);
