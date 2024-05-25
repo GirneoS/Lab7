@@ -7,12 +7,17 @@ import org.example.models.basics.Dragon;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class RemoveHeadCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 13L;
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock writeLock = rwLock.writeLock();
     private String[] cmd;
     /**
      * This method contains the logic for "remove_head" command. Here the program prints first element in the PriorityQueue and delete it.
@@ -22,13 +27,22 @@ public class RemoveHeadCommand implements ExecutableCommand, Serializable {
         Dragon dragon = MainCollection.getQueue().peek();
         if(dragon!=null){
             DataBaseHandler handler = new DataBaseHandler();
+            handler.connectToDataBase();
 
             int userID = handler.getUserIdByName(userName);
 
             if(handler.userOwnerOfDragon(dragon.getId(), userID)){
                 HistoryCommand.UpdateHistory("remove_head");
                 handler.deleteDragonById(dragon.getId());
-                return MainCollection.getQueue().poll().toString();
+
+                String result = "При удалении из коллекции произошла ошибка!";
+                writeLock.lock();
+                try{
+                    result = MainCollection.getQueue().poll().toString();
+                }finally {
+                    writeLock.unlock();
+                }
+                return result;
             }else
                 return "\u001B[31m" + "Вы не можете удалить дракона, который вам не принадлежит!" + "\u001B[0m";
 

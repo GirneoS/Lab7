@@ -6,12 +6,17 @@ import org.example.models.MainCollection;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ClearCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 2L;
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock writeLock = rwLock.writeLock();
     private String[] cmd;
 
     /**
@@ -26,7 +31,13 @@ public class ClearCommand implements ExecutableCommand, Serializable {
                 for (int i = 0; i < sizeCollection; i++) {
                     DataBaseHandler handler = new DataBaseHandler();
                     handler.clearDB();
-                    MainCollection.getQueue().remove();
+
+                    writeLock.lock();
+                    try {
+                        MainCollection.getQueue().remove();
+                    }finally {
+                        writeLock.unlock();
+                    }
                 }
                 HistoryCommand.UpdateHistory("clear");
                 return "\033[0;34m" + "Очистка коллекции..." + "\u001B[0m";

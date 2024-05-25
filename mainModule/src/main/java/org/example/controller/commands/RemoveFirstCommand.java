@@ -7,12 +7,17 @@ import org.example.models.basics.Dragon;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class RemoveFirstCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 12L;
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock writeLock = rwLock.writeLock();
     private String[] cmd;
 
     /**
@@ -26,12 +31,18 @@ public class RemoveFirstCommand implements ExecutableCommand, Serializable {
         Dragon dragon = MainCollection.getQueue().peek();
         if(dragon != null){
             DataBaseHandler handler = new DataBaseHandler();
+            handler.connectToDataBase();
 
             int userID = handler.getUserIdByName(userName);
 
             if(handler.userOwnerOfDragon(dragon.getId(),userID)){
                 handler.deleteDragonById(dragon.getId());
-                MainCollection.getQueue().remove();
+                writeLock.lock();
+                try {
+                    MainCollection.getQueue().remove();
+                }finally {
+                    writeLock.unlock();
+                }
                 HistoryCommand.UpdateHistory("remove_first");
                 return "";
             }else{

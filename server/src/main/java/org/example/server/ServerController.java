@@ -11,6 +11,7 @@ public class ServerController {
     public static void main(String[] args) {
         logger.info("The server has just start!\n-------------------------------------------------\n");
 
+        MainCollection.initCollection();
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(new ServerInput());
     }

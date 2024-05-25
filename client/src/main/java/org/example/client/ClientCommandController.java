@@ -3,7 +3,6 @@ package org.example.client;
 import org.example.controller.commands.*;
 import org.example.controller.ExecutableCommand;
 import org.example.controller.Serialization;
-import org.example.models.RequestDTO;
 
 import java.io.*;
 import java.util.HashMap;
@@ -62,17 +61,17 @@ public class ClientCommandController {
         }
     }
 
-    public static boolean parseAuthentication(String[] command) throws IOException {
+    public static boolean parseAuthentication(String[] command, String userName, String password) throws IOException {
         if(authenticateCom.containsKey(command[0])){
             ExecutableCommand executableCommand = authenticateCom.get(command[0]);
             executableCommand.setCmd(command);
+            executableCommand.setUserName(userName);
+            executableCommand.setPassword(password);
 
             if(executableCommand.validate()){
                 byte[] bytesOfAuth = Serialization.SerializeObject(executableCommand);
 
-
                 boolean result =  ClientNetController.Authenticate(bytesOfAuth);
-                System.out.println("ok");
                 if(result)
                     System.out.println("Вы успешно вошли!");
                 else if(executableCommand.getType().equals("register"))
@@ -82,7 +81,6 @@ public class ClientCommandController {
 
                 return result;
             }
-            System.out.println("not ok");
         }
         System.out.println("Такого варианта аутентификации нет!");
         return false;

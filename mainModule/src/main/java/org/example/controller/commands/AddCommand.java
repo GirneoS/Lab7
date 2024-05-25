@@ -11,6 +11,9 @@ import org.example.models.basics.DragonType;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class AddCommand implements ExecutableCommand, Serializable {
     private String type = "common";
@@ -18,7 +21,8 @@ public class AddCommand implements ExecutableCommand, Serializable {
     private String password;
     private static final long serialVersionUID = 1L;
     private Dragon dragon;
-
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock writeLock = rwLock.writeLock();
     private String[] cmd;
     /**
      * This method contains logic for "add" command. Here a new instance of object added to the PriorityQueue.
@@ -31,7 +35,12 @@ public class AddCommand implements ExecutableCommand, Serializable {
         int userID = handler.getUserIdByName(userName);
 
         if(handler.insertDragon(dragon,userID)) {
-            MainCollection.getQueue().add(dragon);
+            writeLock.lock();
+            try{
+                MainCollection.getQueue().add(dragon);
+            }finally {
+                writeLock.unlock();
+            }
             HistoryCommand.UpdateHistory("add");
 
             return "\033[0;34m" + "Новый дракон: " + dragon + "\u001B[0m";

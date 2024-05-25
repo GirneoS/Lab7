@@ -7,12 +7,17 @@ import org.example.models.basics.Dragon;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class RemoveByIdCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 11L;
+    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final Lock writeLock = rwLock.writeLock();
     private String[] cmd;
 
     /**
@@ -32,10 +37,17 @@ public class RemoveByIdCommand implements ExecutableCommand, Serializable {
             return "\u001B[31m" + "Дракона с таким id не существует в коллекции!" + "\u001B[0m";
         else {
             DataBaseHandler handler = new DataBaseHandler();
+            handler.connectToDataBase();
             int userID = handler.getUserIdByName(userName);
 
             if (handler.userOwnerOfDragon(dragonID, userID)){
-                MainCollection.getQueue().remove(dragon);
+                handler.deleteDragonById(userID);
+                writeLock.lock();
+                try {
+                    MainCollection.getQueue().remove(dragon);
+                }finally {
+                    writeLock.unlock();
+                }
                 HistoryCommand.UpdateHistory("remove_by_id");
                 return "Вы удалили дракона с id = " + dragon.getId();
             }else

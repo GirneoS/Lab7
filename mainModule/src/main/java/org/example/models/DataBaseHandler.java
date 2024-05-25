@@ -37,6 +37,7 @@ public class DataBaseHandler {
             statement.setString(1,userName);
 
             ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
             userID = resultSet.getInt("id");
 
         } catch (SQLException e) {
@@ -158,7 +159,7 @@ public class DataBaseHandler {
             int dragonHeadID = dragonHeadIDResult.getInt("last_value");
 
             String insertDragon = "INSERT INTO dragons(name,creation_date,age,wingspan,speaking,type,head_id,coordinates_id,user_id)" +
-                    "VALUES(?,?,?,?,?,?,?,?,?)";
+                    "VALUES(?,?,?,?,?,CAST(? AS dragon_type),?,?,?)";
             PreparedStatement dragonStatement = connection.prepareStatement(insertDragon);
             dragonStatement.setString(1,dragon.getName());
             dragonStatement.setDate(2, (Date) dragon.getCreationDate());

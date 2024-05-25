@@ -21,8 +21,7 @@ public class ServerInput implements Runnable{
         }
     }
 
-
-    //Читает команду и отправляет на обработку к ClientHandler
+    //Чтение запроса
     @Override
     public void run() {
         ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -34,7 +33,7 @@ public class ServerInput implements Runnable{
                 SocketAddress address = channel.receive(buffer);
                 logger.info("Request has been received\n-------------------------------------------------");
 
-                threadPool.execute(new SMTH(address, channel, bytesOfRequest));
+                threadPool.execute(new Executor(address, channel, bytesOfRequest));
             }
         }catch (IOException e){
             e.printStackTrace();

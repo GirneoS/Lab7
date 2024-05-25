@@ -24,15 +24,6 @@ public class LoginCommand implements ExecutableCommand {
 
     @Override
     public boolean validate() {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Введите никнейм: ");
-        String enteredName = scanner.nextLine();
-        System.out.print("Введите пароль: ");
-        String enteredPass = scanner.nextLine();
-
-        this.userName = enteredName;
-        this.password =  enteredPass;
         return cmd.length==1;
     }
 
