@@ -20,8 +20,7 @@ public class ServerInput implements Runnable{
             e.printStackTrace();
         }
     }
-
-    //Чтение запроса
+    
     public void Start() {
         ExecutorService threadPool = Executors.newCachedThreadPool();
         try {
