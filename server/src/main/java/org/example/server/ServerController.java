@@ -12,6 +12,6 @@ public class ServerController {
         logger.info("The server has just start!\n-------------------------------------------------\n");
 
         MainCollection.initCollection();
-        new ServerInput().run();
+        new ServerInput().Start();
     }
 }
