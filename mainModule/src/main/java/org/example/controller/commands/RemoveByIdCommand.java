@@ -40,8 +40,8 @@ public class RemoveByIdCommand implements ExecutableCommand, Serializable {
             handler.connectToDataBase();
             int userID = handler.getUserIdByName(userName);
 
-            if (handler.userOwnerOfDragon(dragonID, userID)){
-                handler.deleteDragonById(userID);
+            if (handler.userOwnerOfDragon(dragon.getId(), userID)){
+                handler.deleteDragonById(dragon.getId());
                 writeLock.lock();
                 try {
                     MainCollection.getQueue().remove(dragon);
