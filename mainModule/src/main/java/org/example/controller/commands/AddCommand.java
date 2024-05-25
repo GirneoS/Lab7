@@ -12,8 +12,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class AddCommand implements ExecutableCommand, Serializable {
     private String type = "common";
@@ -21,8 +19,7 @@ public class AddCommand implements ExecutableCommand, Serializable {
     private String password;
     private static final long serialVersionUID = 1L;
     private Dragon dragon;
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock writeLock = rwLock.writeLock();
+    private final Lock writeLock = MainCollection.getLock().writeLock();
     private String[] cmd;
     /**
      * This method contains logic for "add" command. Here a new instance of object added to the PriorityQueue.

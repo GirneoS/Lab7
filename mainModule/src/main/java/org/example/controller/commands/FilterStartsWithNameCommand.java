@@ -7,26 +7,35 @@ import org.example.models.basics.Dragon;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 public class FilterStartsWithNameCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 6L;
+    private final Lock readLock = MainCollection.getLock().readLock();
     private String[] cmd;
     @Override
     public String execute(String userName, String password) {
         String subName = cmd[1];
         final String[] answer = {""};
 
-        Optional<Dragon> dragon = MainCollection.getQueue().stream()
-                .filter(x -> x.getName().startsWith(subName))
-                .findFirst();
+        readLock.lock();
+        try {
+            Optional<Dragon> dragon = MainCollection.getQueue().stream()
+                    .filter(x -> x.getName().startsWith(subName))
+                    .findFirst();
 
-        dragon.ifPresentOrElse(
-                v -> {HistoryCommand.UpdateHistory("filter_starts_with_name");
-                    answer[0] += dragon.toString();},
-                () -> answer[0] += "\u001B[31m" + "В коллекции нет драконов, у которых имя начинается с указанной подстроки!" + "\u001B[0m");
+            dragon.ifPresentOrElse(
+                    v -> {
+                        HistoryCommand.UpdateHistory("filter_starts_with_name");
+                        answer[0] += dragon.toString();
+                    },
+                    () -> answer[0] += "\u001B[31m" + "В коллекции нет драконов, у которых имя начинается с указанной подстроки!" + "\u001B[0m");
+        }finally {
+            readLock.unlock();
+        }
 
         return answer[0];
     }

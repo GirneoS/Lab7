@@ -8,16 +8,13 @@ import org.example.models.basics.Dragon;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class RemoveHeadCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 13L;
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock writeLock = rwLock.writeLock();
+    private final Lock writeLock = MainCollection.getLock().writeLock();
     private String[] cmd;
     /**
      * This method contains the logic for "remove_head" command. Here the program prints first element in the PriorityQueue and delete it.

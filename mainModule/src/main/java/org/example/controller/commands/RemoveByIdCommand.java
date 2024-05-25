@@ -8,16 +8,13 @@ import org.example.models.basics.Dragon;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class RemoveByIdCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 11L;
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock writeLock = rwLock.writeLock();
+    private final Lock writeLock = MainCollection.getLock().writeLock();
     private String[] cmd;
 
     /**
@@ -40,8 +37,8 @@ public class RemoveByIdCommand implements ExecutableCommand, Serializable {
             handler.connectToDataBase();
             int userID = handler.getUserIdByName(userName);
 
-            if (handler.userOwnerOfDragon(dragonID, userID)){
-                handler.deleteDragonById(userID);
+            if (handler.userOwnerOfDragon(dragon.getId(), userID)){
+                handler.deleteDragonById(dragon.getId());
                 writeLock.lock();
                 try {
                     MainCollection.getQueue().remove(dragon);

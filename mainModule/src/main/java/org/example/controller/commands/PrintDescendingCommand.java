@@ -5,14 +5,17 @@ import org.example.models.MainCollection;
 import org.example.models.basics.Dragon;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 public class PrintDescendingCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 10L;
+    private final Lock readLock = MainCollection.getLock().readLock();
     private String[] cmd;
 
     /**
@@ -23,11 +26,15 @@ public class PrintDescendingCommand implements ExecutableCommand, Serializable {
      */
     @Override
     public String execute(String userName, String password) {
-
-        List<String> reverseDragons = MainCollection.getQueue().stream()
+        List<String> reverseDragons;
+        readLock.lock();
+        try {
+             reverseDragons = MainCollection.getQueue().stream()
                     .map(Dragon::toString)
                     .toList();
-
+        }finally {
+            readLock.unlock();
+        }
         HistoryCommand.UpdateHistory("print_descending");
         return String.join("\n", reverseDragons);
     }

@@ -7,6 +7,7 @@ import org.example.models.basics.Dragon;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
 public class ShowCommand implements ExecutableCommand, Serializable {
@@ -14,6 +15,7 @@ public class ShowCommand implements ExecutableCommand, Serializable {
     private String userName;
     private String password;
     private static final long serialVersionUID = 15L;
+    private final Lock readLock = MainCollection.getLock().readLock();
     private String[] cmd;
 
     /**
@@ -24,10 +26,16 @@ public class ShowCommand implements ExecutableCommand, Serializable {
      */
     @Override
     public String execute(String userName, String password) {
-        List<String> result = MainCollection.getQueue().stream()
-                .map(Dragon::toString)
-                .collect(Collectors.toList());
+        List<String> result;
 
+        readLock.lock();
+        try {
+            result = MainCollection.getQueue().stream()
+                    .map(Dragon::toString)
+                    .collect(Collectors.toList());
+        }finally {
+            readLock.unlock();
+        }
         HistoryCommand.UpdateHistory("show");
         return String.join("\n",result);
     }

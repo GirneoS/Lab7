@@ -7,16 +7,13 @@ import org.example.models.MainCollection;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ClearCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 2L;
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private final Lock writeLock = rwLock.writeLock();
+    private final Lock writeLock = MainCollection.getLock().writeLock();
     private String[] cmd;
 
     /**

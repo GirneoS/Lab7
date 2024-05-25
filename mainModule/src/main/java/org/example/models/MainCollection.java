@@ -18,6 +18,7 @@ public class MainCollection {
     private static PriorityQueue<Dragon> appQueue = new PriorityQueue<>();
     private static Date initDate;
     private static ArrayList<Integer> dragonIDlist = new ArrayList();
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     public static void initCollection(){
         DataBaseHandler dbHandler = new DataBaseHandler();
         dbHandler.connectToDataBase();
@@ -61,6 +62,9 @@ public class MainCollection {
             e.printStackTrace();
         }
     }
+    public static ReadWriteLock getLock(){
+        return lock;
+    }
     public static PriorityQueue<Dragon> getQueue(){
         return appQueue;
     }
@@ -70,4 +74,5 @@ public class MainCollection {
     public static ArrayList<Integer> getDragonIDlist(){
         return dragonIDlist;
     }
+
 }

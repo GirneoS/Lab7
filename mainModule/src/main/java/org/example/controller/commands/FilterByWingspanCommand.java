@@ -5,14 +5,17 @@ import org.example.models.MainCollection;
 import org.example.models.basics.Dragon;
 
 import java.io.Serializable;
+import java.nio.charset.MalformedInputException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
 
 public class FilterByWingspanCommand implements ExecutableCommand, Serializable {
     private String type = "common";
     private String userName;
     private String password;
     private static final long serialVersionUID = 5L;
+    private final Lock readLock = MainCollection.getLock().readLock();
     private String[] cmd;
 
     /**
@@ -24,11 +27,16 @@ public class FilterByWingspanCommand implements ExecutableCommand, Serializable 
         Optional<Dragon> dragon = Optional.empty();
         final String[] answer = {""};
 
+        readLock.lock();
         try {
             dragon = MainCollection.getQueue().stream()
                     .filter(x -> x.getWingspan() == goal)
                     .findFirst();
-        }catch(NullPointerException ignored){}
+        }catch(NullPointerException ignored){
+
+        }finally {
+            readLock.unlock();
+        }
 
 
         Optional<Dragon> finalDragon = dragon;
