@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
-public class ServerInput implements Runnable{
+public class ServerInput{
     private static final Logger logger = Logger.getLogger("Laba7");
     private DatagramChannel channel;
 
