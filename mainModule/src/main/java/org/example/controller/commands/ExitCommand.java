@@ -17,13 +17,7 @@ public class ExitCommand implements ExecutableCommand, Serializable {
      */
     @Override
     public String execute(String userName, String password) {
-        SaveCommand saveCommand = new SaveCommand();
-        var savedStatus = saveCommand.execute(userName, password);
-
-        System.out.println(savedStatus);
-
         return "exit";
-
     }
 
     /**
