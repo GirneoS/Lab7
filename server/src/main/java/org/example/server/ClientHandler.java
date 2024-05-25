@@ -1,27 +1,27 @@
 package org.example.server;
 
+import org.example.controller.ExecutableCommand;
 import org.example.controller.Serialization;
 
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.concurrent.RecursiveAction;
 
-public class ResponseHandler extends RecursiveAction {
+public class ClientHandler implements Runnable{
     private final SocketAddress clientAddress;
-    private final String result;
 
-    public ResponseHandler(SocketAddress clientAddress, String result) {
+    public ClientHandler(SocketAddress clientAddress) {
         this.clientAddress = clientAddress;
-        this.result = result;
     }
 
     @Override
-    protected void compute() {
+    public void run() {
         try(DatagramChannel channel = DatagramChannel.open()){
-            byte[] bytesOfResult = Serialization.SerializeObject(result);
+            ExecutableCommand command = Server.getQueueOfCommands().poll();
+            String result = command.execute(command.getUserName(), command.getPassword());
 
+            byte[] bytesOfResult = Serialization.SerializeObject(result);
             ByteBuffer buffer = ByteBuffer.wrap(bytesOfResult);
             channel.send(buffer, clientAddress);
 
