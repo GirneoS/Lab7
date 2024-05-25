@@ -22,8 +22,7 @@ public class ServerInput implements Runnable{
     }
 
     //Чтение запроса
-    @Override
-    public void run() {
+    public void Start() {
         ExecutorService threadPool = Executors.newCachedThreadPool();
         try {
             while(true) {
