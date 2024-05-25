@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class Server {
     private static final Logger logger = Logger.getLogger("Laba7");
     private static final DatagramChannel channel;
+    
     //потокобезопасная очередь для обработки запросов
     private static ConcurrentLinkedQueue<ExecutableCommand> queueOfCommands = new ConcurrentLinkedQueue<>();
 
@@ -41,6 +42,7 @@ public class Server {
 
                 SocketAddress address = channel.receive(buffer);
                 logger.info("Request has been received\n-------------------------------------------------");
+                
                 //Чтение запроса
                 threadPool.submit(() -> {
                     try {
@@ -48,7 +50,8 @@ public class Server {
                         queueOfCommands.add(command);
 
                         ForkJoinPool pool = new ForkJoinPool();
-                        //Обработка запроса и отправка ответа
+                        
+                        //Обработка запроса и отправка ответа в классе ClientHandler
                         pool.execute(new ClientHandler(address));
                     } catch (IOException | ClassNotFoundException e) {
                         throw new RuntimeException(e);
